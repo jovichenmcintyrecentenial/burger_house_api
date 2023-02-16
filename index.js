@@ -1,5 +1,6 @@
 //define imports 
 const errorMiddleware = require('./controllers/errorController.js')
+const {userRoutes} = require('./routes/userRoutes.js')
 const apiMonitor = require('./controllers/monitorController.js')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -34,3 +35,9 @@ db.once('open', function() {
     // we're connected!
     console.log('MongoDB Connection successful')
 });
+
+// server.use(apiMonitor)
+server.use(userRoutes)
+
+
+server.use(errorMiddleware)
