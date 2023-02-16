@@ -1,4 +1,6 @@
 //define imports 
+const errorMiddleware = require('./controllers/errorController.js')
+const apiMonitor = require('./controllers/monitorController.js')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const express = require('express')
