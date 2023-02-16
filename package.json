@@ -1,0 +1,32 @@
+{
+    "name": "images_api",
+    "version": "1.0.0",
+    "description": "REST API - Images",
+    "type": "commonjs",
+    "dependencies": {
+        "@mongoosejs/double": "^0.3.0",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.7.0"
+    },
+    "scripts": {
+        "debug": "node index.js",
+        "start": "node index.js",
+        "start_pm2": "pm2 start ecosystem.config.js",
+        "test": "mocha test/**/*.js",
+        "test-coverage": "nyc --reporter=cobertura --reporter=lcov --all -x \"./node_modules/*\" -x \"./coverage/*\" mocha",
+        "junit-report": "mocha test --reporter mocha-junit-reporter "
+    },
+    "author": "Burger house",
+    "private": true,
+    "main": "index.js",
+    "devDependencies": {
+        "chai": "^4.3.7",
+        "eslint": "^8.26.0",
+        "mocha": "^10.1.0",
+        "mocha-junit-reporter": "^2.2.0",
+        "nyc": "^15.1.0"
+    }
+}
