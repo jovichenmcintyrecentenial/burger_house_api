@@ -1,5 +1,4 @@
 var mongoose = require ('mongoose');
-const activitySchema = require('../activityModel');
 
 var userSchema = new mongoose.Schema({
     name: {
