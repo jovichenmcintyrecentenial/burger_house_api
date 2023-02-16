@@ -15,14 +15,10 @@ var userSchema = new mongoose.Schema({
     job_title: {
         type: String,
     }, 
-    activities: {
-        type:[activitySchema],
-        select:false
-    },
     password: {
         type: String,
         minLength: 8,
-        select: false,
+        select: true,
     }, 
 },{timestamps: true});
 

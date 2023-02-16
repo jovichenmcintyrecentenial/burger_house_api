@@ -36,8 +36,10 @@ db.once('open', function() {
     console.log('MongoDB Connection successful')
 });
 
-// server.use(apiMonitor)
+
+server.use(apiMonitor)
 server.use(userRoutes)
+
 
 
 server.use(errorMiddleware)
