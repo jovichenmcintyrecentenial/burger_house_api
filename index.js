@@ -36,11 +36,6 @@ db.once('open', function() {
     console.log('MongoDB Connection successful')
 });
 
-const User = require('./models/userModel');
-
 server.use(apiMonitor)
 server.use(userRoutes)
-
-
-
 server.use(errorMiddleware)
