@@ -1,9 +1,9 @@
 //import express
 const express = require('express');
 const { getUserMyActivities, getMyUser, addUser } = require('../controllers/userController');
-//create router to append routes to
+//create router to append routes to 
 const router = express.Router();
-//get handlers from controller
+//get handlers from controller 
 const {gaurd,login} = require('./../controllers/authenicationController');
 
 
