@@ -1,4 +1,5 @@
 var mongoose = require ('mongoose');
+const orderSchema = require('./orderSchema');
 
 var userSchema = new mongoose.Schema({
     first_name: {
@@ -13,12 +14,19 @@ var userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'type required'],
     },
+    address: {
+        type: String,
+    },
     email: {
         type: String,
         required: [true, 'email required'],
         unique: true,
         lowercase: true,
     }, 
+    order:{
+        type:[orderSchema],
+        select: true,
+    },
     password: {
         type: String,
         minLength: 8,

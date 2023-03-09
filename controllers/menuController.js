@@ -4,26 +4,28 @@ const Menu = require('../models/menuModel.js');
 const error = require('./../utils/errors.js')
 
 //get current login in user information
+//handler for getting all patient in database
 module.exports.getMenus = async (req, res, next) => {
-    
-    //find user recent activty in database based on user id
-    Menu.findOne({ _id: req.userId }).exec(function (error, user) {
-        
-        //if error return the error response
-        if (error) return next(new Error(JSON.stringify(error.errors)))
 
-        //if patient found bring user object
-        if (user) {
-            console.log(user)
-            res.send(user)
-        } else 
-        //if unable to find user return 404
-        {
-            console.log('Not Founded')
-            res.send(404)
-        }
-    })
+    //search for all patient and return an array
+    const {query} = req.query 
+
+    //search for all patient and return an array
+    Menu.find(
+        {$or:[
+            query === undefined?{}:{name: {$regex : query, $options : 'i'},},
+            query === undefined?{}:{type: {$regex : query, $options : 'i'},},
+        ],
+        }).exec(function (error, result) {
+        //if error return error
+        if (error) return next(new Error(JSON.stringify(error.errors)))
+        //return results
+        console.log(result)
+        res.send(result);
+    });
+
 }
+
 
 
 

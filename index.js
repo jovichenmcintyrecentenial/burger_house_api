@@ -4,11 +4,14 @@ const {userRoutes} = require('./routes/userRoutes.js')
 const {menuRoutes} = require('./routes/menuRoutes.js')
 
 const apiMonitor = require('./controllers/monitorController.js')
+const orcerController = require('./controllers/orderController.js')
+
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const express = require('express')
 var dotenv = require('dotenv')
 const cors = require('cors');
+const { orderRoutes } = require('./routes/orderRouter.js')
 //load environmental varibles from env file
 //this contains SERVER_NAME, PORT, HOST, JWT_KEY, JWT_EXPIRY and DB_CONNECTION_STRING
 dotenv.config({
@@ -41,4 +44,6 @@ db.once('open', function() {
 server.use(apiMonitor)
 server.use(userRoutes)
 server.use(menuRoutes)
+server.use(orderRoutes)
+
 server.use(errorMiddleware)
