@@ -1,6 +1,8 @@
 //define imports 
 const errorMiddleware = require('./controllers/errorController.js')
 const {userRoutes} = require('./routes/userRoutes.js')
+const {menuRoutes} = require('./routes/menuRoutes.js')
+
 const apiMonitor = require('./controllers/monitorController.js')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -38,4 +40,5 @@ db.once('open', function() {
 
 server.use(apiMonitor)
 server.use(userRoutes)
+server.use(menuRoutes)
 server.use(errorMiddleware)

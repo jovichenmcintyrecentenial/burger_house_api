@@ -7,7 +7,7 @@ const error = require('./../utils/errors.js')
 module.exports.getMyUser = async (req, res, next) => {
     
     //find user recent activty in database based on user id
-    User.findOne({ _id: req.userId }).select('+activities').exec(function (error, user) {
+    User.findOne({ _id: req.userId }).exec(function (error, user) {
         
         //if error return the error response
         if (error) return next(new Error(JSON.stringify(error.errors)))
