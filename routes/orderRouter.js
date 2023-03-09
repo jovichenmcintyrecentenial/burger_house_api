@@ -1,6 +1,6 @@
 //import express
 const express = require('express');
-const {  getOrders,addOrder } = require('../controllers/orderController');
+const {  getOrders,addOrder, verifyOrder } = require('../controllers/orderController');
 //create router to append routes to
 const router = express.Router();
 //get handlers from controller
@@ -12,6 +12,8 @@ router.use(gaurd);
 
 router.get('/orders', getOrders);
 router.post('/orders', addOrder);
+router.post('/orders/:id/verify', verifyOrder);
+
 
 
 module.exports.orderRoutes = router

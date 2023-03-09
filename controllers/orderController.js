@@ -28,6 +28,37 @@ module.exports.getOrders = async (req, res, next) => {
     })
 }
 
+//verify order
+module.exports.verifyOrder = async (req, res, next) => {
+    
+    //if id path no set then return an error
+    if(req.params.id === undefined){
+        return error.InvalidPath(req,res,next,'id')
+    }
+
+    console.log(req.body)
+    
+    //find and update a patient in database based on user id
+    Order.findOneAndUpdate({ _id: req.params.id },
+        {is_verified:true},{returnOriginal: false}).exec(function (error, patient) {
+        
+        //if error return the error response
+        if (error) return next(new Error(JSON.stringify(error.errors)))
+
+        //if order found bring patient object
+        if (patient) {
+            console.log(patient)
+            res.send(patient)
+        } else 
+        //if unable to find patient return 404
+        {
+            console.log('Not Founded')
+            res.sendStatus(404)
+        }
+    })
+}
+
+
 
 
 //handler for creating new user activity

@@ -24,9 +24,13 @@ var orderSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    is_verified: {
+        type: Boolean,
+        default: false
+    },
     is_delivered: {
         type: Boolean,
-        default: true
+        default: false
     },
     
 },{timestamps: true});
