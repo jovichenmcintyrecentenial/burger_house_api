@@ -6,7 +6,7 @@ const error = require('./../utils/errors.js')
 //get current login in user information
 //handler for getting all patient in database
 module.exports.getMenus = async (req, res, next) => {
-    const { query } = req.query;
+    const { query,popular } = req.query;
 
     // Define the search query using $or operator
     const searchQuery = {
@@ -17,9 +17,10 @@ module.exports.getMenus = async (req, res, next) => {
     };
 
     // Check if the popular parameter is present in the query string
-    if (req.query.popular === 'true') {
+    if (popular === 'true') {
         // Sort by the "likes" attribute in descending order (Z-A)
         searchQuery.$query = { likes: -1 };
+        searchQuery.$limit = 8
     }
 
     // Find all menus matching the search query
