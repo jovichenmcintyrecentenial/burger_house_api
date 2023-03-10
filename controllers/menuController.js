@@ -6,25 +6,35 @@ const error = require('./../utils/errors.js')
 //get current login in user information
 //handler for getting all patient in database
 module.exports.getMenus = async (req, res, next) => {
+    const { query } = req.query;
 
-    //search for all patient and return an array
-    const {query} = req.query 
+    // Define the search query using $or operator
+    const searchQuery = {
+        $or: [
+            query === undefined ? {} : { name: { $regex: query, $options: 'i' } },
+            query === undefined ? {} : { type: { $regex: query, $options: 'i' } },
+        ]
+    };
 
-    //search for all patient and return an array
-    Menu.find(
-        {$or:[
-            query === undefined?{}:{name: {$regex : query, $options : 'i'},},
-            query === undefined?{}:{type: {$regex : query, $options : 'i'},},
-        ],
-        }).exec(function (error, result) {
-        //if error return error
-        if (error) return next(new Error(JSON.stringify(error.errors)))
-        //return results
-        console.log(result)
-        res.send(result);
+    // Check if the popular parameter is present in the query string
+    if (req.query.popular === 'true') {
+        // Sort by the "likes" attribute in descending order (Z-A)
+        searchQuery.$query = { likes: -1 };
+    }
+
+    // Find all menus matching the search query
+    Menu.find(searchQuery).exec(function (error, result) {
+        if (error) {
+            // Return error if any occurred
+            return next(new Error(JSON.stringify(error.errors)));
+        } else {
+            // Return the results
+            console.log(result);
+            res.send(result);
+        }
     });
+};
 
-}
 
 
 
