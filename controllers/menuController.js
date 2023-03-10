@@ -6,7 +6,7 @@ const error = require('./../utils/errors.js')
 //get current login in user information
 //handler for getting all patient in database
 module.exports.getMenus = async (req, res, next) => {
-    const { query,popular } = req.query;
+    const { query,popular,types } = req.query;
 
     // Define the search query using $or operator
     const searchQuery = {
@@ -23,17 +23,36 @@ module.exports.getMenus = async (req, res, next) => {
         searchQuery.$limit = 8
     }
 
-    // Find all menus matching the search query
-    Menu.find(searchQuery).exec(function (error, result) {
-        if (error) {
-            // Return error if any occurred
-            return next(new Error(JSON.stringify(error.errors)));
-        } else {
-            // Return the results
+
+    // Check if the popular parameter is present in the query string
+    if (types === 'true') {
+        try {
+            const menus = await Menu.aggregate([
+                { $group: { _id: '$type', menu: { $first: '$$ROOT' } } },
+                { $sort: { _id: 1 } }
+            ]);
+    
+            const result = menus.map((menu) => menu.menu);
             console.log(result);
+
             res.send(result);
+        } catch (error) {
+            next(new Error(JSON.stringify(error)));
         }
-    });
+    }
+    else {
+        // Find all menus matching the search query
+        Menu.find(searchQuery).exec(function (error, result) {
+            if (error) {
+                // Return error if any occurred
+                return next(new Error(JSON.stringify(error.errors)));
+            } else {
+                // Return the results
+                console.log(result);
+                res.send(result);
+            }
+        });
+    }
 };
 
 
