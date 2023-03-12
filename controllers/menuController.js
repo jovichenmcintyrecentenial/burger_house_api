@@ -19,7 +19,7 @@ module.exports.getMenus = async (req, res, next) => {
     // Check if the popular parameter is present in the query string
     if (popular === 'true') {
         // Sort by the "likes" attribute in descending order (Z-A)
-        searchQuery.$query = { likes: -1 };
+        searchQuery.$sort = { likes: -1 };
         searchQuery.$limit = 8
     }
 
