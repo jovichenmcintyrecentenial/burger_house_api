@@ -59,13 +59,11 @@ module.exports.verifyOrder = async (req, res, next) => {
 }
 
 
-
-
 //handler for creating new user activity
-module.exports.addOrder = async (req, res, next)  => {
+module.exports.createOrder = async (req, res, next)  => {
 
     //extract arguements from request body
-    const{menu_items_ids} = req.body;
+    const{menu_items_ids,estimate} = req.body;
 
     try {
         // Query the database to find the orders with the specified IDs
@@ -96,7 +94,7 @@ module.exports.addOrder = async (req, res, next)  => {
         await deliveryFee.save(); // Save the fee to the database
       
         // Create the tax fee object
-        const taxRate = 0.07; // 7% tax rate
+        const taxRate = 0.15; // 7% tax rate
 
         const taxFee = new Fee({
             name: 'Tax',
@@ -113,18 +111,23 @@ module.exports.addOrder = async (req, res, next)  => {
             // is_delivered:is_delivered,
         });
 
-        // Create the patient and saving to db
-        newOrder.save(function (err, result) {
+        if(estimate === true) {
+            return res.status(201).send(newOrder)
+        }
+        else{
+            // Create the patient and saving to db
+            newOrder.save(function (err, result) {
 
-            //if error return error
-            if (err) return error.Error(req,res,next,JSON.stringify(err))
-            console.log(result)
+                //if error return error
+                if (err) return error.Error(req,res,next,JSON.stringify(err))
+                console.log(result)
 
-            //return newly created menu if added successfully
-            return res.status(201).send(result)
+                //return newly created menu if added successfully
+                return res.status(201).send(result)
 
 
-        })
+            })
+        }
 
     } catch (err) {
         console.error(err);
