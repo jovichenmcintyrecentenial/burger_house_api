@@ -66,12 +66,18 @@ module.exports.createOrder = async (req, res, next)  => {
     const{menu_items_ids,estimate} = req.body;
 
     try {
+
+        var ids = menu_items_ids.map(id => mongoose.Types.ObjectId(id))
+       
         // Query the database to find the orders with the specified IDs
-        const menus = await Menu.find({
-            _id: {
-                $in: menu_items_ids.map(id => mongoose.Types.ObjectId(id))
-            }
-        });
+        var menus = [];
+
+        for(var x = 0;x<ids.length;x++){
+            menus.push(await Menu.findOne({
+                _id: ids[x]
+            }));
+        }
+
         console.log('Found orders:', menus);
         
         //calculate total cost
@@ -101,13 +107,19 @@ module.exports.createOrder = async (req, res, next)  => {
             price: totalCost * taxRate // Calculate the tax based on the total cost
         });
 
+        var fees = [deliveryFee,serviceFee,taxFee]
+
+        fees.forEach(fee => {
+            totalCost += fee.price;
+        });
+
         // Creating new menu item.
         var newOrder = new Order({
             menu_items: menus,
-            fees: [deliveryFee,serviceFee,taxFee],
+            fees: fees,
             // deliver: deliver,
             customer_id: req.userId,
-            // total: is_active,
+            total: totalCost,
             // is_delivered:is_delivered,
         });
 
