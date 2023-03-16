@@ -6,15 +6,23 @@ const error = require('./../utils/errors.js')
 //get current login in user information
 //handler for getting all patient in database
 module.exports.getMenus = async (req, res, next) => {
-    const { query,popular,types } = req.query;
+    const { query,popular,types,category } = req.query;
 
     // Define the search query using $or operator
-    const searchQuery = {
+    var searchQuery = {
         $or: [
             query === undefined ? {} : { name: { $regex: query, $options: 'i' } },
             query === undefined ? {} : { type: { $regex: query, $options: 'i' } },
         ]
     };
+
+    if(category !== undefined){
+        searchQuery = {
+            $or: [
+                category === undefined ? {} : { type: { $regex: category, $options: 'i' } },
+            ]
+        };
+    }
 
     // Check if the popular parameter is present in the query string
     if (popular === 'true') {
