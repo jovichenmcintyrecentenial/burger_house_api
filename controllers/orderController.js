@@ -88,22 +88,22 @@ module.exports.createOrder = async (req, res, next)  => {
 
         const deliveryFee = new Fee({
             name: 'Delivery fee',
-            price: 5.99
+            price: 1.99 + (totalCost*0.02)
         });
 
         
         const serviceFee = new Fee({
             name: 'Service fee',
-            price: 5.99
+            price: 2.99
         });
 
         await deliveryFee.save(); // Save the fee to the database
       
         // Create the tax fee object
-        const taxRate = 0.15; // 7% tax rate
+        const taxRate = 0.1533; // 7% tax rate
 
         const taxFee = new Fee({
-            name: 'Tax',
+            name: 'Tax 15%',
             price: totalCost * taxRate // Calculate the tax based on the total cost
         });
 

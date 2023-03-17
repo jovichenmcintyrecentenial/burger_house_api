@@ -11,6 +11,9 @@ var orderSchema = new mongoose.Schema({
     fees: {
         type: [feeSchema],
     },
+    delivery_address: {
+        type: String,
+    },
     deliver: {
         type: String,
     },

@@ -14,8 +14,11 @@ var userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'type required'],
     },
-    address: {
+    recent_address: {
         type: String,
+    },
+    addresses: {
+        type: [String],
     },
     email: {
         type: String,
@@ -23,7 +26,7 @@ var userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
     }, 
-    order:{
+    orders:{
         type:[orderSchema],
         select: true,
     },
