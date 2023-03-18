@@ -1,4 +1,5 @@
 var mongoose = require ('mongoose');
+const addressSchema = require('./addressSchema');
 const orderSchema = require('./orderSchema');
 
 var userSchema = new mongoose.Schema({
@@ -18,7 +19,7 @@ var userSchema = new mongoose.Schema({
         type: String,
     },
     addresses: {
-        type: [String],
+        type: [addressSchema],
     },
     email: {
         type: String,

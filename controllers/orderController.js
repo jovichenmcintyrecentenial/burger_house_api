@@ -103,7 +103,7 @@ module.exports.createOrder = async (req, res, next)  => {
         const taxRate = 0.1533; // 7% tax rate
 
         const taxFee = new Fee({
-            name: 'Tax 15%',
+            name: 'Tax 15.33%',
             price: totalCost * taxRate // Calculate the tax based on the total cost
         });
 
