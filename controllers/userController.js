@@ -27,6 +27,24 @@ module.exports.getMyUser = async (req, res, next) => {
     })
 }
 
+//get users address
+module.exports.getMyAddresses = async (req, res, next) => {
+    
+    //find user recent activty in database based on user id
+    User.findOne({ _id: req.userId }).exec(function (error, user) {
+        
+        //if error return the error response
+        if (error) return next(new Error(JSON.stringify(error.errors)))
+
+        //if patient found bring user object
+        if (user) {
+            console.log(user.addresses)
+            return res.send(user.addresses)
+        } 
+    })
+}
+
+
 //handler for creating new user activity
 module.exports.addUser = async (req, res, next)  => {
 
@@ -108,7 +126,7 @@ module.exports.addUserAddress = async (req, res, next)  => {
             var tempAddress = user.addresses[index]
             if(tempAddress.address == address){
                 console.log(user.addresses[user.addresses.length-1])
-                return res.send(address)
+                return res.send(tempAddress)
             }
         }
 
@@ -128,4 +146,34 @@ module.exports.addUserAddress = async (req, res, next)  => {
 
 }
 
+//delete a single patient information
+module.exports.deleteUserAddress = async (req, res, next) => {
 
+    //if id path no set then return an error
+    if(req.params.id === undefined){
+        return error.InvalidPath(req,res,next,'id')
+    }
+
+    try {
+        // Find the user by ID and the address by ID in the addresses array
+        const user = await User.findOne({ _id: req.userId });
+        const address = user.addresses.id(req.params.id);
+    
+        if (!address) {
+            // If the address is not found, return an error response
+            return res.status(404).json({ message: 'Address not found' });
+        }
+    
+        // Remove the address from the addresses array and save the updated user object
+        address.remove();
+        await user.save();
+    
+        // Return a success response
+        return res.status(200).json({ message: 'Address deleted successfully' });
+    } catch (err) {
+        // Handle any errors that occur
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+
+}
