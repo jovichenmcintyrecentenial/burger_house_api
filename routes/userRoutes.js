@@ -1,6 +1,6 @@
 //import express
 const express = require('express');
-const { getUserMyActivities, getMyUser, addUser } = require('../controllers/userController');
+const { getUserMyActivities, getMyUser, addUser, addUserAddress } = require('../controllers/userController');
 //create router to append routes to 
 const router = express.Router();
 //get handlers from controller 
@@ -17,6 +17,8 @@ router.post('/users', addUser);
 router.use(gaurd);
 
 router.get('/users/me', getMyUser);
+router.post('/users/addresses', addUserAddress);
+
 
 module.exports.userRoutes = router
 

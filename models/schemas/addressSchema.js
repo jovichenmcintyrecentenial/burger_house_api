@@ -9,14 +9,14 @@ var addressSchema = new mongoose.Schema({
     },
     latitude: {
         type: mongoose.Schema.Types.Number,
-        required: [true, 'cost required'],
+        required: [true, 'lat required'],
     },  
     longitude: {
         type: mongoose.Schema.Types.Number,
-        required: [true, 'cost required'],
+        required: [true, 'long required'],
     },  
      
-},{timestamps: false});
+},{timestamps: true});
 
 module.exports = addressSchema;
 

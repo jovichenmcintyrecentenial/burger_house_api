@@ -1,6 +1,8 @@
 //get imports
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel.js');
+const Address = require('../models/addressModel.js');
+
 const error = require('./../utils/errors.js')
 
 //get current login in user information
@@ -73,4 +75,49 @@ module.exports.addUser = async (req, res, next)  => {
 
     return true;
 }
+
+//handler for creating new user activity
+module.exports.addUserAddress = async (req, res, next)  => {
+
+    //extract arguements from request body
+    const{address, latitude,longitude} = req.body;
+
+    //check if first_name is define and return error if necessary
+    if(address === undefined){
+        return error.InvalidArgument(req,res,next,'address');
+    }
+    //check if last_name is define and return error if necessary
+    if(latitude === undefined){
+        return error.InvalidArgument(req,res,next,'latitude');
+    }
+    //check if email_address is define and return error if necessary
+    if(longitude === undefined){
+        return error.InvalidArgument(req,res,next,'longitude');
+    }
+
+    User.findOne({ _id: req.userId }).exec(async function (error, user) {
+        
+        //Creating new patient.
+        var newAddress = new Address({
+            address:address,
+            latitude:latitude,
+            longitude:longitude
+        });
+
+        //if patient found bring user object
+        if (user) {
+            user.addresses.push(newAddress)
+            await user.save(function (err, result) {
+
+                //if error return error
+                if (err) return error.Error(req,res,next,JSON.stringify(err))
+                
+                console.log(user.addresses[user.addresses.length-1])
+                return res.send(user.addresses[user.addresses.length-1])
+            })
+        } 
+    })
+
+}
+
 
