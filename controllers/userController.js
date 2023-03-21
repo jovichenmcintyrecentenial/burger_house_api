@@ -104,6 +104,14 @@ module.exports.addUserAddress = async (req, res, next)  => {
             longitude:longitude
         });
 
+        for(var index in user.addresses){
+            var tempAddress = user.addresses[index]
+            if(tempAddress.address == address){
+                console.log(user.addresses[user.addresses.length-1])
+                return res.send(address)
+            }
+        }
+
         //if patient found bring user object
         if (user) {
             user.addresses.push(newAddress)
