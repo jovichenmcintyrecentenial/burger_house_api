@@ -1,6 +1,6 @@
 //import express
 const express = require('express');
-const { getUserMyActivities, getMyUser, addUser, addUserAddress, getMyAddresses, deleteUserAddress } = require('../controllers/userController');
+const { getUserMyActivities, getMyUser, addUser, addUserAddress, getMyAddresses, deleteUserAddress, getMyCards, addCard, deleteCard } = require('../controllers/userController');
 //create router to append routes to 
 const router = express.Router();
 //get handlers from controller 
@@ -20,6 +20,9 @@ router.get('/users/me', getMyUser);
 router.get('/users/addresses', getMyAddresses);
 router.post('/users/addresses', addUserAddress);
 router.delete('/users/addresses/:id', deleteUserAddress);
+router.get('/users/cards', getMyCards);
+router.post('/users/cards', addCard);
+router.delete('/users/cards/:id', deleteCard);
 
 
 module.exports.userRoutes = router

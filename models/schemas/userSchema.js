@@ -1,5 +1,6 @@
 var mongoose = require ('mongoose');
 const addressSchema = require('./addressSchema');
+const cardSchema = require('./cardSchema');
 const orderSchema = require('./orderSchema');
 
 var userSchema = new mongoose.Schema({
@@ -17,6 +18,9 @@ var userSchema = new mongoose.Schema({
     },
     recent_address: {
         type: String,
+    },
+    cards:{
+        type:[cardSchema],
     },
     addresses: {
         type: [addressSchema],

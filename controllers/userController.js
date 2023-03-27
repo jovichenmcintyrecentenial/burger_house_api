@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel.js');
 const Address = require('../models/addressModel.js');
 
-const error = require('./../utils/errors.js')
+const error = require('./../utils/errors.js');
+const Card = require('../models/cardModel.js');
 
 //get current login in user information
 module.exports.getMyUser = async (req, res, next) => {
@@ -146,6 +147,88 @@ module.exports.addUserAddress = async (req, res, next)  => {
 
 }
 
+// Handler for adding a new card
+module.exports.addCard = async (req, res, next) => {
+    // Extract arguments from request body
+    const { card_number, card_date, cvv } = req.body;
+  
+    // Check if card number is defined and return error if necessary
+    if (card_number === undefined) {
+        return error.InvalidArgument(req, res, next, 'card_number');
+    }
+  
+    // Check if card date is defined and return error if necessary
+    if (card_date === undefined) {
+        return error.InvalidArgument(req, res, next, 'card_date');
+    }
+  
+    // Check if cvv is defined and return error if necessary
+    if (cvv === undefined) {
+        return error.InvalidArgument(req, res, next, 'cvv');
+    }
+  
+    // Find the user based on the authenticated user ID
+    User.findOne({ _id: req.userId }).exec(async function (error, user) {
+        // Create a new card
+        var newCard = new Card({
+            card_number: card_number,
+            card_date: card_date,
+            cvv: cvv,
+        });
+  
+        // Check if the user already has the same card
+        for (var index in user.cards) {
+            var tempCard = user.cards[index];
+            if (tempCard.card_number == card_number) {
+                console.log(user.cards[user.cards.length - 1]);
+                return res.send(tempCard);
+            }
+        }
+  
+        // If the user is found, add the new card to the user's list of cards
+        if (user) {
+            user.cards.push(newCard);
+            await user.save(function (err, result) {
+                // If there's an error, return the error message
+                if (err) return error.Error(req, res, next, JSON.stringify(err));
+  
+                console.log(user.cards[user.cards.length - 1]);
+                return res.send(user.cards[user.cards.length - 1]);
+            });
+        }
+    });
+};
+
+// Handler for deleting a card
+module.exports.deleteCard = async (req, res, next) => {
+    // If card ID path parameter is not set, return an error
+    if (req.params.id === undefined) {
+        return error.InvalidPath(req, res, next, 'id');
+    }
+  
+    try {
+        // Find the user by ID and the card by ID in the cards array
+        const user = await User.findOne({ _id: req.userId });
+        const card = user.cards.id(req.params.id);
+  
+        if (!card) {
+        // If the card is not found, return an error response
+            return res.status(404).json({ message: 'Card not found' });
+        }
+  
+        // Remove the card from the cards array and save the updated user object
+        card.remove();
+        await user.save();
+  
+        // Return a success response
+        return res.status(200).json({ message: 'Card deleted successfully' });
+    } catch (err) {
+        // Handle any errors that occur
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 //delete a single patient information
 module.exports.deleteUserAddress = async (req, res, next) => {
 
@@ -177,3 +260,19 @@ module.exports.deleteUserAddress = async (req, res, next) => {
     }
 
 }
+
+
+// Handler for getting all cards associated with a user
+module.exports.getMyCards = async (req, res, next) => {
+    // Find the user based on the authenticated user ID
+    User.findOne({ _id: req.userId }).exec(function (error, user) {
+        // If there's an error, return the error message
+        if (error) return next(new Error(JSON.stringify(error.errors)));
+  
+        // If the user is found, return the list of cards associated with the user
+        if (user) {
+            console.log(user.cards);
+            return res.send(user.cards);
+        }
+    });
+};
