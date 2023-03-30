@@ -10,7 +10,7 @@ const Fee = require('../models/feeModel.js');
 module.exports.getOrders = async (req, res, next) => {
     
     //find user recent activty in database based on user id
-    Menu.findOne({ _id: req.userId }).exec(function (error, user) {
+    Order.find({ customer_id: req.userId }).exec(function (error, user) {
         
         //if error return the error response
         if (error) return next(new Error(JSON.stringify(error.errors)))
@@ -23,7 +23,7 @@ module.exports.getOrders = async (req, res, next) => {
         //if unable to find user return 404
         {
             console.log('Not Founded')
-            res.send(404)
+            res.sendStatus(404)
         }
     })
 }
